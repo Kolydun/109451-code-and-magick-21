@@ -180,14 +180,18 @@
   </div>
 </template>
 <script>
+  'use strict';
+  const wizardHeightCoeff = 1.337;
   var fireballSize = 22;
   var wizardSpeed = 3;
   var wizardWidth = 70;
   var getWizardHeight = function () {
-    return 1.337 * wizardWidth;
+    return wizardHeightCoeff * wizardWidth;
   }
   var getFireballSpeed = function (isMovingLeft) {
-    isMovingLeft ? 2 : 5;
+    var speedLeft = 2;
+    var speedRight = 5;
+    return isMovingLeft ? speedLeft : speedRight;
   }
   var getWizardX = function (gameFieldWidth) {
     return (gameFieldWidth - wizardWidth) / 2;
