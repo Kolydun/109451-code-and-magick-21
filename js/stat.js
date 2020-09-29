@@ -16,11 +16,10 @@ var TEXT_TOP = 'Ура вы победили!';
 var TEXT_BOTTOM = 'Список результатов:';
 var PLAYER_COLOR = 'rgba(255, 0, 0, 1)';
 var TEXT_COLOR = '#000';
+var barBottom = CLOUD_Y + CLOUD_HEIGHT - BAR_BOTTOM_GAP;
 
 var textY = CLOUD_Y + 30;
 var textX = CLOUD_X + 20;
-/* var otherPlayers = 'hsl(240, 100%,' + saturation + '%)';*/
-
 
 var renderCloud = function (ctx, x, y, color) {
   ctx.fillStyle = color;
@@ -45,8 +44,23 @@ var renderTime = function (ctx, time, x, y, color, font) {
   ctx.fillText(time, x, y);
 };
 
-var renderBar = function (ctx, x, y, width, height) {
-  ctx.fillRect(x, y, width, height);
+var renderBars = function (ctx, players, times) {
+  var maxTime = getMaxElement(times);
+
+  for (var i = 0; i < players.length; i++) {
+    var barLeft = CLOUD_X + BAR_GAP + (BAR_GAP + BAR_WIDTH) * i;
+    var barHeight = BAR_HEIGHT * times[i] / maxTime;
+    var barTop = barBottom - barHeight;
+    renderName(ctx, players[i], barLeft, barBottom + BAR_BOTTOM_GAP / 2, TEXT_COLOR, FONT_FAMILY);
+    renderTime(ctx, Math.round(times[i]), barLeft, barTop - GAP, TEXT_COLOR, FONT_FAMILY);
+    if (players[i] === 'Вы') {
+      ctx.fillStyle = PLAYER_COLOR;
+    } else {
+      var saturation = Math.round(Math.random() * 100);
+      ctx.fillStyle = 'hsl(240, 100%,' + saturation + '%)';
+    }
+    ctx.fillRect(barLeft, barTop, BAR_WIDTH, barHeight);
+  }
 };
 
 var getMaxElement = function (arr) {
@@ -60,37 +74,13 @@ var getMaxElement = function (arr) {
 
   return maxElement;
 };
-/* Код функции getMaxElement можно сoкоратить воспользовавшись встроенным объектом Math и оператором spread(троеточие) из es6.
- Это опцинальная правка)
-
- var getMaxElement = function (arr) {
- return Math.max(...arr);
- } */
-
 
 window.renderStatistics = function (ctx, players, times) {
   renderCloud(ctx, CLOUD_X + GAP, CLOUD_Y + GAP, SHADOW_COLOR);
   renderCloud(ctx, CLOUD_X, CLOUD_Y, CLOUD_COLOR);
   renderText(ctx, TEXT_COLOR, FONT_FAMILY, textX, textY, TEXT_TOP);
   renderText(ctx, TEXT_COLOR, FONT_FAMILY, textX, textY + FONT_GAP, TEXT_BOTTOM);
-
-  var maxTime = getMaxElement(times);
-
-  for (var i = 0; i < players.length; i++) {
-    var barLeft = CLOUD_X + BAR_GAP + (BAR_GAP + BAR_WIDTH) * i;
-    var barBottom = CLOUD_Y + CLOUD_HEIGHT - BAR_BOTTOM_GAP;
-    var barHeight = BAR_HEIGHT * times[i] / maxTime;
-    var barTop = barBottom - barHeight;
-    renderName(ctx, players[i], barLeft, barBottom + BAR_BOTTOM_GAP / 2, TEXT_COLOR, FONT_FAMILY);
-    renderTime(ctx, Math.round(times[i]), barLeft, barTop - GAP, TEXT_COLOR, FONT_FAMILY);
-    if (players[i] === 'Вы') {
-      ctx.fillStyle = PLAYER_COLOR;
-    } else {
-      var saturation = Math.round(Math.random() * 100);
-      ctx.fillStyle = 'hsl(240, 100%,' + saturation + '%)';
-    }
-    renderBar(ctx, barLeft, barTop, BAR_WIDTH, barHeight);
-  }
+  renderBars(ctx, players, times);
 };
 
 
