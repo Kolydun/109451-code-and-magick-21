@@ -1,12 +1,5 @@
 'use strict';
 
-var USER_DIALOG = document.querySelector('.setup');
-var SIMILAR_LIST_ELEMENT = document.querySelector('.setup-similar-list');
-var SIMILAR_WIZARD_TEMPLATE = document.querySelector('#similar-wizard-template')
-  .content
-  .querySelector('.setup-similar-item');
-var WIZARD_FRAGMENT = document.createDocumentFragment();
-var WIZARD_LIST = document.querySelector('.setup-similar');
 var ARR_FIRST_NAMES = [
   'Иван',
   'Хуан Себастьян',
@@ -43,31 +36,76 @@ var ARR_EYE_COLORS = [
   'yellow',
   'green'
 ];
-var ARR_WIZZARDS = [];
-let getRandomNum = function (min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-};
-var WIZARD_NAMES_NUM = 4;
 
-USER_DIALOG.classList.remove('hidden');
+main();
 
+function main() {
+  var arrWizards = generateWizards(4);
+  var fragment = createWizardFragment(arrWizards);
+  var similarListElement = document.querySelector('.setup-similar-list');
+  similarListElement.appendChild(fragment);
+  showUserDialog();
+  showWizardList();
+}
 
-for (var i = 0; i < WIZARD_NAMES_NUM; i++) {
-  ARR_WIZZARDS [i] = {
+function generateWizards(number) {
+  let arrWizards = [];
+  for (var i = 0; i < number; i++) {
+    arrWizards [i] = generateRandomWizard();
+  }
+  return arrWizards;
+}
+
+function generateRandomWizard() {
+  return {
     name: ARR_FIRST_NAMES[getRandomNum(0, 7)] + ' ' + ARR_SECOND_NAMES[getRandomNum(0, 7)],
     coat: ARR_COAT_COLORS[getRandomNum(0, 5)],
     eye: ARR_EYE_COLORS[getRandomNum(0, 4)]
   };
 }
 
-for (var j = 0; j < ARR_WIZZARDS.length; j++) {
-  var wizardElement = SIMILAR_WIZARD_TEMPLATE.cloneNode(true);
-  wizardElement.querySelector('.setup-similar-label').textContent = ARR_WIZZARDS[j].name;
-  wizardElement.querySelector('.wizard-coat').style.fill = ARR_WIZZARDS[j].coat;
-  wizardElement.querySelector('.wizard-eyes').style.fill = ARR_WIZZARDS[j].eye;
-
-  WIZARD_FRAGMENT.appendChild(wizardElement);
-  SIMILAR_LIST_ELEMENT.appendChild(WIZARD_FRAGMENT);
+function createWizardFragment(arrWizards) {
+  var wizardFragment = document.createDocumentFragment();
+  for (var i = 0; i < arrWizards.length; i++) {
+    addWizardToFragment(arrWizards[i], wizardFragment);
+  }
+  return wizardFragment;
 }
 
-WIZARD_LIST.classList.remove('hidden');
+function addWizardToFragment(wizard, wizardFragment) {
+  var wizardElement = fillWizardTemplate(wizard);
+  wizardFragment.appendChild(wizardElement);
+}
+
+
+function fillWizardTemplate(wizard) {
+  var wizardConfig = getWizardTemplate();
+  var wizardElement = wizardConfig.cloneNode(true);
+  wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
+  wizardElement.querySelector('.wizard-coat').style.fill = wizard.coat;
+  wizardElement.querySelector('.wizard-eyes').style.fill = wizard.eye;
+  return wizardElement;
+}
+
+function getWizardTemplate() {
+  var wizardTemplate = document.querySelector('#similar-wizard-template').content;
+  var wizardConfig = wizardTemplate.querySelector('.setup-similar-item');
+  return wizardConfig;
+}
+
+
+function showUserDialog() {
+  var userDialog = document.querySelector('.setup');
+  userDialog.classList.remove('hidden');
+}
+
+
+function showWizardList() {
+  var wizardList = document.querySelector('.setup-similar');
+  wizardList.classList.remove('hidden');
+}
+
+
+function getRandomNum(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
