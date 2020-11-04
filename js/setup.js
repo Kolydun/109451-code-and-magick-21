@@ -42,11 +42,11 @@ function getRandomNum(min, max) {
 }
 
 function generateWizards(number) {
-  var CompletedArrWizards = [];
+  var completedArrWizards = [];
   for (var i = 0; i < number; i++) {
-    CompletedArrWizards.push(generateRandomWizard());
+    completedArrWizards.push(generateRandomWizard());
   }
-  return CompletedArrWizards;
+  return completedArrWizards;
 }
 
 function generateRandomWizard() {
@@ -102,115 +102,11 @@ function showWizardList() {
   wizardList.classList.remove('hidden');
 }
 
+/* Задание 9 */
 showUserDialog();
 addWizardToList();
 showWizardList();
-
-/* Задание 9 */
-
-// var ARR_FIREBALL_COLORS = [
-//   '#ee4830',
-//   '#30a8ee',
-//   '#5ce6c0',
-//   '#e848d5',
-//   '#e6e848',
-// ];
-// var KEY_CODE = {
-//   ESC: 27,
-//   ENTER: 13
-// };
-//
-// var onDocumentKeydown = function (evt) {
-//   if (evt.keyCode === KEY_CODE.ESC) {
-//     closeUserDialog();
-//   }
-// };
-//
-// function closeUserDialog() {
-//   document.querySelector('.setup').classList.add('hidden');
-//   document.removeEventListener('keydown', onDocumentKeydown);
-// }
-//
-// function openUserDialog() {
-//   document.querySelector('.setup').classList.remove('hidden');
-//   document.addEventListener('keydown', onDocumentKeydown);
-// }
-//
-// function closeUserDialogWindow() {
-//   var closeButton = document.querySelector('.setup-close');
-//   document.addEventListener('keydown', function (evt) {
-//     if (evt.keyCode === KEY_CODE.ESC) {
-//       closeUserDialog();
-//     }
-//   });
-//   closeButton.addEventListener('keydown', function (evt) {
-//     if (evt.keyCode === KEY_CODE.ENTER) {
-//       closeUserDialog();
-//     }
-//   });
-//   closeButton.addEventListener('click', function () {
-//     closeUserDialog();
-//   });
-// }
-//
-// function openUserDialogWindow() {
-//   var openButton = document.querySelector('.setup-open');
-//   openButton.addEventListener('keydown', function (evt) {
-//     if (evt.keyCode === KEY_CODE.ENTER) {
-//       openUserDialog();
-//     }
-//   });
-//   openButton.addEventListener('click', function () {
-//     openUserDialog();
-//   });
-// }
-//
-// function setCloseButtonKeydown() {
-//   var userNameField = document.querySelector('.setup-user-name');
-//   userNameField.addEventListener('focus', function () {
-//     document.removeEventListener('keydown', onDocumentKeydown);
-//   });
-//   userNameField.addEventListener('blur', function () {
-//     document.addEventListener('keydown', onDocumentKeydown);
-//   });
-// }
-//
-// function changeFireballColor() {
-//   var fireball = document.querySelector('.setup-fireball-wrap');
-//   var fireballColor = document.querySelector('input[name=fireball-color]');
-//   fireball.addEventListener('click', function () {
-//     fireballColor.value = ARR_FIREBALL_COLORS[getRandomNum(0, 4)];
-//     fireball.style = 'background: ' + fireballColor.value;
-//   });
-// }
-//
-// function changeWizardEyesColor() {
-//   var wizardEyes = document.querySelector('#wizard-eyes');
-//   var wizardEyesColor = document.querySelector('.wizard-eyes');
-//   var wizardEyesColorValue = document.querySelector('input[name=eyes-color]');
-//   wizardEyes.addEventListener('click', function () {
-//     wizardEyesColorValue.value = ARR_EYE_COLORS[getRandomNum(0, 4)];
-//     wizardEyesColor.style = 'fill: ' + wizardEyesColorValue.value;
-//   });
-// }
-//
-// function changeWizardCoatColor() {
-//   var wizardCoat = document.querySelector('#wizard-coat');
-//   var wizardCoatColor = document.querySelector('.wizard-coat');
-//   var wizardCoatColorValue = document.querySelector('input[name=coat-color]');
-//   wizardCoat.addEventListener('click', function () {
-//     wizardCoatColorValue.value = ARR_COAT_COLORS[getRandomNum(0, 5)];
-//     wizardCoatColor.style = 'fill: ' + wizardCoatColorValue.value;
-//   });
-// }
-
-
-// changeFireballColor();
-// changeWizardEyesColor();
-// changeWizardCoatColor();
-// closeUserDialogWindow();
-// openUserDialogWindow();
-// setCloseButtonKeydown();
+userDialogSetup();
 
 function userDialogSetup() {
   var ARR_FIREBALL_COLORS = [
@@ -224,24 +120,34 @@ function userDialogSetup() {
     ESC: 27,
     ENTER: 13
   };
-  var closeButton = document.querySelector('.setup-close');
+  var userDialog = document.querySelector('.setup');
+  var closeButton = userDialog.querySelector('.setup-close');
   var openButton = document.querySelector('.setup-open');
-  var userNameField = document.querySelector('.setup-user-name');
-  var fireball = document.querySelector('.setup-fireball-wrap');
-  var fireballColor = document.querySelector('input[name=fireball-color]');
+  var userNameField = userDialog.querySelector('.setup-user-name');
+  var fireball = userDialog.querySelector('.setup-fireball-wrap');
+  var fireballColor = userDialog.querySelector('input[name=fireball-color]');
   var wizardEyes = document.querySelector('#wizard-eyes');
-  var wizardEyesColor = document.querySelector('.wizard-eyes');
-  var wizardEyesColorValue = document.querySelector('input[name=eyes-color]');
+  var wizardEyesColor = userDialog.querySelector('.wizard-eyes');
+  var wizardEyesColorValue = userDialog.querySelector('input[name=eyes-color]');
   var wizardCoat = document.querySelector('#wizard-coat');
-  var wizardCoatColor = document.querySelector('.wizard-coat');
-  var wizardCoatColorValue = document.querySelector('input[name=coat-color]');
-
-  var onDocumentKeydown = function (evt) {
-    if (evt.keyCode === KEY_CODE.ESC) {
-      closeUserDialog();
+  var wizardCoatColor = userDialog.querySelector('.wizard-coat');
+  var wizardCoatColorValue = userDialog.querySelector('input[name=coat-color]');
+  var keyboard = {
+    isEscEvent: function (evt, callback) {
+      if (evt.keyCode === KEY_CODE.ESC) {
+        callback();
+      }
+    },
+    isEnterEvent: function (evt, callback) {
+      if (evt.keyCode === KEY_CODE.ENTER) {
+        callback();
+      }
     }
   };
 
+  function onDocumentKeydown(evt) {
+    keyboard.isEscEvent(evt, closeUserDialog);
+  }
   function closeUserDialog() {
     document.querySelector('.setup').classList.add('hidden');
     document.removeEventListener('keydown', onDocumentKeydown);
@@ -252,24 +158,15 @@ function userDialogSetup() {
     document.addEventListener('keydown', onDocumentKeydown);
   }
 
-  document.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === KEY_CODE.ESC) {
-      closeUserDialog();
-    }
-  });
   closeButton.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === KEY_CODE.ENTER) {
-      closeUserDialog();
-    }
+    keyboard.isEnterEvent(evt, closeUserDialog);
   });
   closeButton.addEventListener('click', function () {
     closeUserDialog();
   });
 
   openButton.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === KEY_CODE.ENTER) {
-      openUserDialog();
-    }
+    keyboard.isEnterEvent(evt, openUserDialog);
   });
   openButton.addEventListener('click', function () {
     openUserDialog();
@@ -278,6 +175,7 @@ function userDialogSetup() {
   userNameField.addEventListener('focus', function () {
     document.removeEventListener('keydown', onDocumentKeydown);
   });
+
   userNameField.addEventListener('blur', function () {
     document.addEventListener('keydown', onDocumentKeydown);
   });
@@ -299,5 +197,3 @@ function userDialogSetup() {
     wizardCoatColor.style = 'fill: ' + wizardCoatColorValue.value;
   });
 }
-
-userDialogSetup();
